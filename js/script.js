@@ -3,11 +3,20 @@ const ctx = canvas.getContext("2d");
 
 const size = 30;
 
+const randomNumber = () => {
+  let nX = Math.round(Math.random() * canvas.width - size);
+  let nY = Math.round(Math.random() * canvas.width - size);
+
+  nX = Math.round(nX / 30) * 30;
+  nY = Math.round(nY / 30) * 30;
+
+  return { nX: nX, nY: nY };
+};
+
 const snake = [
   { x: 300, y: 300 },
   { x: 330, y: 300 },
 ];
-const food = { x: 30, y: 30, color: "red" };
 
 let direction;
 let loopId;
@@ -20,11 +29,12 @@ const drawSnake = () => {
   });
 };
 
+const food = randomNumber();
+
 const drawFood = () => {
-  const { x, y } = food;
   ctx.fillStyle = "red";
 
-  ctx.fillRect(x, y, size, size);
+  ctx.fillRect(food.nX, food.nY, size, size);
 };
 
 const moveSnake = () => {
@@ -50,7 +60,6 @@ const drawGrid = () => {
   ctx.strokeStyle = "#fff";
 
   for (let i = size; i < canvas.width; i += size) {
-    console.log(i);
     ctx.beginPath();
     ctx.lineTo(i, 0);
     ctx.lineTo(i, 600);
