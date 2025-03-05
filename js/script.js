@@ -7,6 +7,7 @@ const snake = [
   { x: 300, y: 300 },
   { x: 330, y: 300 },
 ];
+const food = { x: 30, y: 30, color: "red" };
 
 let direction;
 let loopId;
@@ -17,6 +18,13 @@ const drawSnake = () => {
     if (index == snake.length - 1) ctx.fillStyle = "#dfdd00";
     ctx.fillRect(pos.x, pos.y, size, size);
   });
+};
+
+const drawFood = () => {
+  const { x, y } = food;
+  ctx.fillStyle = "red";
+
+  ctx.fillRect(x, y, size, size);
 };
 
 const moveSnake = () => {
@@ -61,6 +69,7 @@ const gameLoop = () => {
   drawGrid();
   moveSnake();
   drawSnake();
+  drawFood();
 
   loopId = setTimeout(() => gameLoop(), 300);
 };
