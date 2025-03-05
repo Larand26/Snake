@@ -3,20 +3,20 @@ const ctx = canvas.getContext("2d");
 
 const size = 30;
 
-const randomNumber = () => {
-  let nX = Math.round(Math.random() * canvas.width - size);
-  let nY = Math.round(Math.random() * canvas.width - size);
-
-  nX = Math.round(nX / 30) * 30;
-  nY = Math.round(nY / 30) * 30;
-
-  return { nX: nX, nY: nY };
-};
-
 const snake = [
   { x: 300, y: 300 },
   { x: 330, y: 300 },
 ];
+
+const randomNumber = () => {
+  let nX, nY;
+  do {
+    nX = Math.floor(Math.random() * 20) * 30; // Gera múltiplos de 30 entre 0 e 570
+    nY = Math.floor(Math.random() * 20) * 30;
+  } while (snake.some((segment) => segment.x === nX && segment.y === nY));
+
+  return { x: nX, y: nY };
+};
 
 let direction;
 let loopId;
@@ -29,12 +29,11 @@ const drawSnake = () => {
   });
 };
 
-const food = randomNumber();
-
+let food = randomNumber();
 const drawFood = () => {
   ctx.fillStyle = "red";
 
-  ctx.fillRect(food.nX, food.nY, size, size);
+  ctx.fillRect(food.x, food.y, size, size);
 };
 
 const moveSnake = () => {
@@ -71,11 +70,22 @@ const drawGrid = () => {
   }
 };
 
+const checkEat = () => {
+  const head = snake.at(-1);
+
+  if (head.x == food.x && head.y == food.y) {
+    snake.push(head);
+    food = randomNumber();
+    console.log(food);
+  }
+};
+
 const gameLoop = () => {
   clearInterval(loopId);
   ctx.clearRect(0, 0, 600, 600);
 
   drawGrid();
+  checkEat();
   moveSnake();
   drawSnake();
   drawFood();
@@ -84,8 +94,6 @@ const gameLoop = () => {
 };
 
 document.addEventListener("keydown", (evt) => {
-  console.log(evt.key);
-
   switch (evt.key) {
     case "ArrowRight":
       if (direction !== "left") direction = "right";
