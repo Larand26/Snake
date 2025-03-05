@@ -79,18 +79,43 @@ const checkEat = () => {
     console.log(food);
   }
 };
+const checkColisao = () => {
+  const head = snake.at(-1);
+
+  // Verifica colisão com as bordas do canvas
+  if (
+    head.x >= canvas.width ||
+    head.x < 0 ||
+    head.y >= canvas.height ||
+    head.y < 0
+  ) {
+    alert("Perdeu! Bateu na parede.");
+    location.reload();
+    return;
+  }
+  if (snake.slice(0, -1).some((el) => head.x === el.x && head.y === el.y)) {
+    alert("Perdeu! Bateu em si mesmo.");
+    location.reload();
+  }
+};
+
+const refreshContador = () => {
+  document.querySelector("#contador").innerText = snake.length - 2;
+};
 
 const gameLoop = () => {
   clearInterval(loopId);
   ctx.clearRect(0, 0, 600, 600);
 
   drawGrid();
+  checkColisao();
   checkEat();
   moveSnake();
   drawSnake();
   drawFood();
+  refreshContador();
 
-  loopId = setTimeout(() => gameLoop(), 300);
+  loopId = setTimeout(() => gameLoop(), 200);
 };
 
 document.addEventListener("keydown", (evt) => {
